@@ -100,10 +100,24 @@ function alertError(message) {
   });
 }
 
+
+ipcRenderer.on('data', (event, data) => {
+  //document.getElementById('data').innerHTML = data;
+});
+
 // File select listener
 // img.addEventListener('change', loadImage);
 // Form submit listener
 form.addEventListener('submit', resizeImage);
 // Scan wifi listener
 scanWifi.addEventListener('click', scanWifiNetworks);
+
+ipcRenderer.on('scan:wifi', (event, data) => {
+  // display the data in the main window
+  ipcRenderer.send('return');
+  document.getElementById('test').innerHTML = "<p>data</p>";
+
+});
+
+
 

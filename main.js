@@ -5,7 +5,7 @@ const resizeImg = require('resize-img');
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const { spawn } = require('child_process');
 
-const isDev = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV !== 'dev';
 const isMac = process.platform === 'darwin';
 
 let mainWindow;
@@ -123,6 +123,20 @@ ipcMain.on('image:resize', (e, options) => {
 
 // Respond to the resize image event
 ipcMain.on('scan:wifi', (e) => {
+
+
+  let secondWindow = new BrowserWindow({ width: 800, height: 600 });
+
+// Load the HTML file for the second window
+secondWindow.loadFile('./renderer/index.html');
+
+// Send data to the second window when it's ready to receive
+secondWindow.webContents.on('did-finish-load', () => {
+secondWindow.webContents.send('data', 'Hello from the main process!');
+});
+
+
+
   console.log('scan:wifi');
   // execute un fichier python
     const pyprog = spawn('python', ['./renderer/python/scanWifi.py']);
@@ -130,6 +144,9 @@ ipcMain.on('scan:wifi', (e) => {
         console.log(data.toString());
         mainWindow.webContents.send('scan:wifi', data.toString());
     });
+
+
+
 });
 
 // Resize and save image
