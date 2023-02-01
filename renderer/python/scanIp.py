@@ -1,4 +1,3 @@
-
 import os
 import subprocess
 import time
@@ -109,8 +108,6 @@ def test():
         print(results)
         rc = 0
     return rc
-
-
 
 
 if __name__ == "__main__":
