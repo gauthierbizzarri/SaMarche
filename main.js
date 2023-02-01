@@ -155,9 +155,10 @@ secondWindow.webContents.send('data', 'Hello from the main process!');
 ipcMain.on('python:wifi', (e, options) => {
   console.log("python:wifi");
   const pyprog = spawn('python', ['./renderer/python/test.py']);
+
   pyprog.stdout.on('data', function(data) {
     console.log(data.toString());
-    secondWindow.webContents.send('python:wifi', data.toString());
+    secondWindow.webContents.send('python:wifi', "fghjkl","tRESTG");
   });
 });
 
