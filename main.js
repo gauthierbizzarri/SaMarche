@@ -5,7 +5,7 @@ const resizeImg = require('resize-img');
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const { spawn } = require('child_process');
 
-// const isDev = process.env.NODE_ENV !== 'dev';
+const isDev = process.env.NODE_ENV !== 'dev';
 const isMac = process.platform === 'darwin';
 
 let mainWindow;
