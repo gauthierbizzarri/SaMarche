@@ -5,12 +5,20 @@ const filename = document.querySelector('#filename');
 const heightInput = document.querySelector('#height');
 const widthInput = document.querySelector('#width');
 const scanWifi = document.querySelector('#scanWifi');
+const scanIp = document.querySelector('#scanIp');
 
 function scanWifiNetworks() {
   // ipcRenderer.send('wifi:scan');
   console.log('scan wifi networks');
   ipcRenderer.send('scan:wifi');
 }
+
+function scanIpNetwork() {
+  // ipcRenderer.send('wifi:scan');
+  console.log('scan IP networks');
+  ipcRenderer.send('scanIp:ip');
+}
+
 
 
 // Load image and show form
@@ -111,11 +119,19 @@ ipcRenderer.on('data', (event, data) => {
 form.addEventListener('submit', resizeImage);
 // Scan wifi listener
 scanWifi.addEventListener('click', scanWifiNetworks);
+scanIp.addEventListener('click', scanIpNetwork);
 
 ipcRenderer.on('scan:wifi', (event, data) => {
   // display the data in the main window
   ipcRenderer.send('return');
   document.getElementById('scanWifi').innerHTML = "<p>data</p>";
+
+});
+
+ipcRenderer.on('scanIp:ip', (event, data) => {
+  // display the data in the main window
+  ipcRenderer.send('return');
+  document.getElementById('scanIp').innerHTML = "<p>data</p>";
 
 });
 

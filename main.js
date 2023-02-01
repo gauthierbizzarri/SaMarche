@@ -120,6 +120,33 @@ ipcMain.on('image:resize', (e, options) => {
 
 
 
+ipcMain.on('scanIp:ip', (e) => {
+  scaIpWindow = new BrowserWindow({
+    width: isDev ? 1000 : 500,
+    height: 600,
+    icon: `${__dirname}/assets/icons/Icon_256x256.png`,
+    resizable: isDev,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+
+  // Show devtools automatically if in development
+  if (isDev) {
+    scaIpWindow.webContents.openDevTools();
+  }
+
+// Load the HTML file for the second window
+  scaIpWindow.loadFile('./renderer/ip.html');
+// Send data to the second window when it's ready to receive
+  scaIpWindow.webContents.on('did-finish-load', () => {
+    scaIpWindow.webContents.send('data', 'Hello from the main process!');
+});
+});
+
+
 ipcMain.on('scan:wifi', (e) => {
   secondWindow = new BrowserWindow({
     width: isDev ? 1000 : 500,
@@ -139,11 +166,11 @@ ipcMain.on('scan:wifi', (e) => {
   }
 
 // Load the HTML file for the second window
-secondWindow.loadFile('./renderer/wifi.html');
+  secondWindow.loadFile('./renderer/wifi.html');
 // Send data to the second window when it's ready to receive
-secondWindow.webContents.on('did-finish-load', () => {
-secondWindow.webContents.send('data', 'Hello from the main process!');
-});
+  secondWindow.webContents.on('did-finish-load', () => {
+    secondWindow.webContents.send('data', 'Hello from the main process!');
+  });
 });
 
 let scan_wifi_data = "";
