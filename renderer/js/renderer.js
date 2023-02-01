@@ -99,15 +99,6 @@ function alertError(message) {
     },
   });
 }
-
-
-ipcRenderer.on('data', (event, data) => {
-  //document.getElementById('data').innerHTML = data;
-});
-
-// File select listener
-// img.addEventListener('change', loadImage);
-// Form submit listener
 form.addEventListener('submit', resizeImage);
 // Scan wifi listener
 scanWifi.addEventListener('click', scanWifiNetworks);
@@ -117,6 +108,23 @@ ipcRenderer.on('scan:wifi', (event, data) => {
   ipcRenderer.send('return');
   document.getElementById('test').innerHTML = "<p>data</p>";
 
+});
+
+
+ipcRenderer.on('data', (event, data) => {
+  // Check if the data is an array
+  if (Array.isArray(data)) {
+    // Clear the current content of the list
+    document.getElementById('data').innerHTML = '';
+    // Loop through the items in the array
+    data.forEach(item => {
+      // Create a new list item
+      let li = document.createElement('li');
+      li.innerHTML = item;
+      // Append the new list item to the list
+      document.getElementById('data').appendChild(li);
+    });
+  }
 });
 
 

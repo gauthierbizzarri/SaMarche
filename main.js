@@ -127,12 +127,13 @@ ipcMain.on('scan:wifi', (e) => {
 
   let secondWindow = new BrowserWindow({ width: 800, height: 600 });
 
-// Load the HTML file for the second window
-secondWindow.loadFile('./renderer/index.html');
+  // Load the HTML file for the second window
+  secondWindow.loadFile('./renderer/wifi.html');
 
-// Send data to the second window when it's ready to receive
-secondWindow.webContents.on('did-finish-load', () => {
-secondWindow.webContents.send('data', 'Hello from the main process!');
+  // Send data to the second window when it's ready to receive
+  secondWindow.webContents.on('did-finish-load', () => {
+  secondWindow.webContents.send('data', 'Hello from the main process!');
+
 });
 
 
