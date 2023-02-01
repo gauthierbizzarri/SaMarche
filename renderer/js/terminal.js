@@ -1,5 +1,8 @@
-// TERMINAL TYPING CODE BY STEVE DEKORTE
-
+const spanPythonResult = document.querySelector('#spanPythonResult');
+function scanWifiNetworks() {
+    console.log('python:wifi terminal.js');
+    ipcRenderer.send('python:wifi');
+}
 function getAllElementsWithAttribute(attribute)
 {
     var matchingElements = [];
@@ -15,9 +18,7 @@ function getAllElementsWithAttribute(attribute)
     }
     return matchingElements;
 }
-
 var terminalElements = getAllElementsWithAttribute("terminal");
-
 function terminals_init()
 {
     var elements = terminalElements;
@@ -72,14 +73,24 @@ function terminals_next()
             done = false
         }
     }
-
     if (!done)
     {
         //window.clearInterval(terminalIntervalFunction)
         setTimeout(terminals_next, 800/20)
     }
 }
-
 terminals_init()
 
-window.onload = function() { terminals_start() };
+window.onload = function() {
+
+    scanWifiNetworks();
+    // terminals_start()
+};
+
+
+ipcRenderer.on('python:wifi', (event, data) => {
+    // display the data in the main window
+    ipcRenderer.send('return');span
+    console.log("testsssssssssssssssssssss");
+    spanPythonResult.innerHTML = data;
+});

@@ -6,7 +6,6 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="../renderer/css/terminal.css"/>
-    <script src="../renderer/js/renderer.js" defer></script>
     <script src="../renderer/js/terminal.js" defer></script>
     <title>Scan Wifi</title>
 </head>
@@ -17,7 +16,7 @@
     <div class="header">
         <h1>root@Imerir:~#</h1>
     </div>
-    <span terminal=1 class="terminal-line">
+    <span id="spanPythonResult" terminal=1 class="terminal-line">
     Hello stranger.
   <br/><br/>
     This is a simple terminal typing test with plain JavaScript.
@@ -29,21 +28,6 @@
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
   </span>
 </div>
-<!-- Form -->
-<form id="img-form" class="hidden">
-    <div class="mt-6">
-        <label class="mt-1 block text-white text-center w-80 m-auto py-3 shadow-sm border-gray-300 rounded-md">Width</label>
-        <input type="number" name="width" id="width" class="mt-1 block w-80 m-auto p-3 shadow-sm border-gray-300 rounded-md" placeholder="Width"/></div>
-    <div class="mt-4">
-        <label class="mt-1 block text-white text-center w-80 m-auto py-3 shadow-sm border-gray-300 rounded-md">Height</label>
-        <input type="number" name="height" id="height" class="mt-1 block w-80 m-auto p-3 shadow-sm border-gray-300 rounded-md" placeholder="Height"/>
-    </div>
-    <!-- Button -->
-    <div class="mt-6">
-        <button type="submit" class="w-80 m-auto flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-500 hover:bg-teal-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Resize</button>
-</form>
-<p class="text-white text-lg text-center font-mono mt-6"><strong>File: </strong><span id="filename"></span></p>
-<p class="text-white text-lg text-center font-mono mt-2"><strong>Output: </strong><span id="output-path"></span></p>
 </div>
 </body>
 </html>

@@ -29,7 +29,6 @@ function createMainWindow() {
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
-
     // mainWindow.loadURL(`file://${__dirname}/renderer/index.html`);
    mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
 }
@@ -49,10 +48,8 @@ function createAboutWindow() {
 // When the app is ready, create the window
 app.on('ready', () => {
   createMainWindow();
-
   const mainMenu = Menu.buildFromTemplate(menu);
   Menu.setApplicationMenu(mainMenu);
-
   // Remove variable from memory
   mainWindow.on('closed', () => (mainWindow = null));
 });
@@ -120,33 +117,48 @@ ipcMain.on('image:resize', (e, options) => {
   resizeImage(options);
 });
 
-
 // Respond to the resize image event
 ipcMain.on('scan:wifi', (e) => {
+  secondWindow = new BrowserWindow({
+    width: isDev ? 1000 : 500,
+    height: 600,
+    icon: `${__dirname}/assets/icons/Icon_256x256.png`,
+    resizable: isDev,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
 
-
-  let secondWindow = new BrowserWindow({ width: 800, height: 600 });
+  // Show devtools automatically if in development
+  if (isDev) {
+    secondWindow.webContents.openDevTools();
+  }
 
 // Load the HTML file for the second window
 secondWindow.loadFile('./renderer/wifi.html');
-
 // Send data to the second window when it's ready to receive
 secondWindow.webContents.on('did-finish-load', () => {
 secondWindow.webContents.send('data', 'Hello from the main process!');
 });
+  // console.log('scan:wifi');
+  // // execute un fichier python
+  //   const pyprog = spawn('python', ['./renderer/python/scanWifi.py']);
+  //   pyprog.stdout.on('data', function(data) {
+  //       console.log(data.toString());
+  //       mainWindow.webContents.send('scan:wifi', data.toString());
+  //   });
+});
 
 
-
-  console.log('scan:wifi');
-  // execute un fichier python
-    const pyprog = spawn('python', ['./renderer/python/scanWifi.py']);
-    pyprog.stdout.on('data', function(data) {
-        console.log(data.toString());
-        mainWindow.webContents.send('scan:wifi', data.toString());
-    });
-
-
-
+ipcMain.on('python:wifi', (e, options) => {
+  console.log("python:wifi");
+  const pyprog = spawn('python', ['./renderer/python/test.py']);
+  pyprog.stdout.on('data', function(data) {
+    console.log(data.toString());
+    secondWindow.webContents.send('python:wifi', data.toString());
+  });
 });
 
 // Resize and save image

@@ -115,7 +115,7 @@ scanWifi.addEventListener('click', scanWifiNetworks);
 ipcRenderer.on('scan:wifi', (event, data) => {
   // display the data in the main window
   ipcRenderer.send('return');
-  document.getElementById('test').innerHTML = "<p>data</p>";
+  document.getElementById('scanWifi').innerHTML = "<p>data</p>";
 
 });
 
