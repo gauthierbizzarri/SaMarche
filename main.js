@@ -117,7 +117,9 @@ ipcMain.on('image:resize', (e, options) => {
   resizeImage(options);
 });
 
-// Respond to the resize image event
+
+
+
 ipcMain.on('scan:wifi', (e) => {
   secondWindow = new BrowserWindow({
     width: isDev ? 1000 : 500,
@@ -142,23 +144,19 @@ secondWindow.loadFile('./renderer/wifi.html');
 secondWindow.webContents.on('did-finish-load', () => {
 secondWindow.webContents.send('data', 'Hello from the main process!');
 });
-  // console.log('scan:wifi');
-  // // execute un fichier python
-  //   const pyprog = spawn('python', ['./renderer/python/scanWifi.py']);
-  //   pyprog.stdout.on('data', function(data) {
-  //       console.log(data.toString());
-  //       mainWindow.webContents.send('scan:wifi', data.toString());
-  //   });
 });
 
-
+let scan_wifi_data = "";
 ipcMain.on('python:wifi', (e, options) => {
   console.log("python:wifi");
-  const pyprog = spawn('python', ['./renderer/python/test.py']);
-
-  pyprog.stdout.on('data', function(data) {
+  const wifi_off =  spawn('python', ['./renderer/python/wifi_off.py'],{ encoding: 'utf8' });
+  const pyprog = spawn('python', ['./renderer/python/scanWifi.py']);
+  pyprog.stdout.on('data', data=>{
+    console.log("BEGIN");
     console.log(data.toString());
-    secondWindow.webContents.send('python:wifi', "fghjkl","tRESTG");
+    console.log("END");
+    scan_wifi_data = scan_wifi_data+data.toString()
+    secondWindow.webContents.send('python:wifi', "",scan_wifi_data);
   });
 });
 

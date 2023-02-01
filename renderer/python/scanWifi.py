@@ -4,11 +4,21 @@ import time
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+import subprocess
+
+print("TEST")
 
 url = "http://www.python.org"
 timeout = 5
+print("[LOADING] Searching if connected to any network")
 
 
+
+
+import sys, os, traceback, types
+from runasadmin import *
+
+run_as_admin()
 def createNewConnection(name, SSID, key):
     config = """<?xml version=\"1.0\"?>
 <WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
@@ -47,26 +57,40 @@ def createNewConnection(name, SSID, key):
 
 
 def connect(name, SSID):
-    os.system("netsh wlan connect name=\"" + name + "\" ssid=\"" + SSID + "\" interface=Wi-Fi")
+    """
+    command = "netsh wlan connect name={} ssid={} interface=Wi-Fi ".format(name,SSID)
+    os.system(command)
+    """
+
+    
+    result = subprocess.run(['netsh', 'wlan', 'connect', f'name="{name}"', f'ssid="{SSID}"', 'interface=Wi-Fi'],
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    print(result.stdout,flush=True)
+    print(result.stderr,flush=True)
 
 
 def displayAvailableNetworks():
-    os.system("netsh wlan show networks interface=Wi-Fi")
+    WIFI = "Wi-Fi"
+    print("\n")
+    command ="netsh wlan show networks interface=Wi-Fi"
+    os.system(command)
+    """result = subprocess.run(['netsh', 'wlan', 'show', 'networks', 'interface=Wi-Fi'])
+    print(result.stdout)
+    print(result.stderr)"""
 
-
-print("[LOADING] Searching if connected to any network")
 
 try:
     request = requests.get(url, timeout=timeout)
     print("[-] Please disconnect your internet for this operation to work, try again later"), exit()
 
 except (requests.ConnectionError, requests.Timeout) as exception:
-    print("[LOADING] Loading program..."), time.sleep(1)
+    print("[LOADING] Loading program...",flush=True), time.sleep(1)
 
 connected = True
 while connected:
     try:
         displayAvailableNetworks()
+        exit()
         WIFI = input("WIFI Name: ")
         with open("passwords", "r") as f:
             for line in f:

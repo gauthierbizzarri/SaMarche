@@ -1,37 +1,7 @@
-import os
-import subprocess
-import time
-import nmap
+import sys, os, traceback, types
 import win32api, win32con, win32event, win32process
 from win32com.shell.shell import ShellExecuteEx
 from win32com.shell import shellcon
-import socket
-
-
-def get_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        # envoi d'un paquet à google pour obtenir l'adresse ip
-        s.connect(('8.8.8.8', 80))
-        ip = s.getsockname()[0]
-    except:
-        ip = '127.0.0.1'
-    finally:
-        s.close()
-
-    return ip
-
-def get_mask():
-    ip = get_ip()
-    mask = ip[:ip.rfind('.')+1] + '0/24'
-    return mask
-
-
-
-
-
-import sys, os, traceback, types
-
 def isUserAdmin():
 
     if os.name == 'nt':
@@ -90,33 +60,16 @@ def runAsAdmin(cmdLine=None, wait=True):
         obj = win32event.WaitForSingleObject(procHandle, win32event.INFINITE)
         rc = win32process.GetExitCodeProcess(procHandle)
         print("Process handle %s returned code %s" % (procHandle, rc))
-        print("Scanning...")
-        print(get_mask())
-        results = nmap.nmap_os_detection(get_mask())
-        # result = nmap.scan_top_ports(get_mask())
-        print("Scanning done.")
-        print(results)
     else:
         rc = None
 
     return rc
 
-def test():
+def run_as_admin():
     rc = 0
     if not isUserAdmin():
         rc = runAsAdmin()
     else:
-        nmap = nmap3.Nmap()
-        print("Scanning...")
-        print(get_mask())
-        results = nmap.nmap_os_detection(get_mask())
-        # result = nmap.scan_top_ports(get_mask())
-        print("Scanning done.")
-        print(results)
-        rc = 0
+        pass
     return rc
-
-
-if __name__ == "__main__":
-    test()
 
