@@ -13,8 +13,8 @@ const isMac = process.platform === 'darwin';
 // Set up the main window
 let mainWindow;
 let aboutWindow;
-
-
+let secondWindow;
+let scaIpWindow;
 
 // Main Window
 function createMainWindow() {
@@ -32,7 +32,7 @@ function createMainWindow() {
 
   // Show devtools automatically if in development
   if (isDev) {
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   }
     // mainWindow.loadURL(`file://${__dirname}/renderer/index.html`);
    mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
@@ -46,7 +46,6 @@ function createAboutWindow() {
     title: 'About Electron',
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
   });
-
    aboutWindow.loadFile(path.join(__dirname, './renderer/about.html'));
 }
 
@@ -115,13 +114,6 @@ const menu = [
     : []),
 ];
 
-
-
-// scan ip
-
-
-
-
 ipcMain.on('scanIp:ip', (e) => {
   scaIpWindow = new BrowserWindow({
     width: isDev ? 1000 : 500,
@@ -137,7 +129,7 @@ ipcMain.on('scanIp:ip', (e) => {
 
   // Show devtools automatically if in development
   if (isDev) {
-    scaIpWindow.webContents.openDevTools();
+    // scaIpWindow.webContents.openDevTools();
   }
 
 // Load the HTML file for the second window
@@ -210,7 +202,7 @@ ipcMain.on('EvilScan', (e) => {
 
   // Show devtools automatically if in development
   if (isDev) {
-    evilwindow.webContents.openDevTools();
+    // evilwindow.webContents.openDevTools();
   }
 
 // Load the HTML file for the second window
@@ -219,18 +211,17 @@ ipcMain.on('EvilScan', (e) => {
   evilwindow.webContents.on('did-finish-load', () => {
     evilwindow.webContents.send('data', 'Hello from the main process!');
     const options = {
-      target:'10.3.0.0/24',
-      port:'80,8000,3000,8081,3306;9090,9091,8080,443,5000',
-  status:'Open', // Timeout, Refused, Open, Unreachable
+      target:'10.7.4.0/24',
+      port:'80,8000,3000,8081,3306;9090,8080,443',
+      status:'Open', // Timeout, Refused, Open, Unreachable
       banner:true
     };
-
-
 
     const evilscan = new Evilscan(options);
     let overalldata ="";
     evilscan.on('result',data => {
       // fired when item is matching options
+      console.log("Scan Result");
       console.log(data);
       overalldata = overalldata + JSON.stringify(data)
       evilwindow.webContents.send('EvilScan:output', "",overalldata);
@@ -243,13 +234,11 @@ ipcMain.on('EvilScan', (e) => {
 
     evilscan.on('done', () => {
       // finished !
+      console.log("Scan Finished")
     });
-    evilscan.run()
-
-
+    evilscan.run();
   });
 });
-
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   if (!isMac) app.quit();
