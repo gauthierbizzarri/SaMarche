@@ -6,6 +6,7 @@ const heightInput = document.querySelector('#height');
 const widthInput = document.querySelector('#width');
 const scanWifi = document.querySelector('#scanWifi');
 const scanIp = document.querySelector('#scanIp');
+const EvilScan= document.querySelector('#EvilScan');
 
 function scanWifiNetworks() {
   // ipcRenderer.send('wifi:scan');
@@ -18,7 +19,11 @@ function scanIpNetwork() {
   console.log('scan IP networks');
   ipcRenderer.send('scanIp:ip');
 }
-
+function evilscan() {
+  // ipcRenderer.send('wifi:scan');
+  console.log('EvilScan');
+  ipcRenderer.send('EvilScan');
+}
 
 
 // Load image and show form
@@ -120,6 +125,8 @@ form.addEventListener('submit', resizeImage);
 // Scan wifi listener
 scanWifi.addEventListener('click', scanWifiNetworks);
 scanIp.addEventListener('click', scanIpNetwork);
+EvilScan.addEventListener('click',evilscan);
+
 
 ipcRenderer.on('scan:wifi', (event, data) => {
   // display the data in the main window
@@ -135,6 +142,11 @@ ipcRenderer.on('scanIp:ip', (event, data) => {
 
 });
 
+ipcRenderer.on('EvilScan', (event, data) => {
+  // display the data in the main window
+  ipcRenderer.send('return');
+  document.getElementById('EvilScan').innerHTML = "<p>data</p>";
 
+});
 
 

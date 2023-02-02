@@ -182,47 +182,48 @@ let scan_wifi_data = "";
 ipcMain.on('python:wifi', (e, options) => {
   console.log("python:wifi");
   const wifi_off =  spawn('python', ['./renderer/python/wifi_off.py'],{ encoding: 'utf8' });
-  const pyprog = spawn('python', ['./renderer/python/scanWifi.py']);
+  const pyprog = spawn('python', ['./renderer/python/scanWifi.py'],{ encoding: 'utf8' });
   pyprog.stdout.on('data', data=>{
+    //scan_wifi_data = scan_wifi_data+
+    //Buffer.from(data, 'utf-8').toString();
+    scan_wifi_data = "<p> Running Scan Wifi ....</p>"
     console.log("BEGIN");
-    console.log(data.toString());
+    console.log(
+    scan_wifi_data = scan_wifi_data+
+    Buffer.from(data, 'utf-8').toString());
     console.log("END");
-    scan_wifi_data = scan_wifi_data+data.toString()
     secondWindow.webContents.send('python:wifi', "",scan_wifi_data);
   });
 });
 
-// Resize and save image
-async function resizeImage({ imgPath, height, width, dest }) {
-  try {
-    // console.log(imgPath, height, width, dest);
 
-    // Resize image
-    const newPath = await resizeImg(fs.readFileSync(imgPath), {
-      width: +width,
-      height: +height,
-    });
 
-    // Get filename
-    const filename = path.basename(imgPath);
+ipcMain.on('EvilScan', (e) => {
+  evilwindow = new BrowserWindow({
+    width: isDev ? 1000 : 500,
+    height: 600,
+    icon: `${__dirname}/assets/icons/Icon_256x256.png`,
+    resizable: isDev,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
 
-    // Create destination folder if it doesn't exist
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest);
-    }
-
-    // Write the file to the destination folder
-    fs.writeFileSync(path.join(dest, filename), newPath);
-
-    // Send success to renderer
-    mainWindow.webContents.send('image:done');
-
-    // Open the folder in the file explorer
-    shell.openPath(dest);
-  } catch (err) {
-    console.log(err);
+  // Show devtools automatically if in development
+  if (isDev) {
+    evilwindow.webContents.openDevTools();
   }
-}
+
+// Load the HTML file for the second window
+  evilwindow.loadFile('./renderer/wifi.html');
+// Send data to the second window when it's ready to receive
+  evilwindow.webContents.on('did-finish-load', () => {
+    evilwindow.webContents.send('data', 'Hello from the main process!');
+    evilscan();
+  });
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -258,5 +259,3 @@ evilscan.on('error', err => {
 evilscan.on('done', () => {
   // finished !
 });
-
-evilscan.run();

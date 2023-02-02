@@ -90,6 +90,5 @@ window.onload = function() {
 
 ipcRenderer.on('python:wifi', (event, data) => {
     // display the data in the main window
-    console.log("testsssssssssssssssssssss");
     spanPythonResult.innerHTML = data;
 });

