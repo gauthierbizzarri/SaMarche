@@ -138,7 +138,7 @@ ipcRenderer.on('scan:wifi', (event, data) => {
 ipcRenderer.on('scanIp:ip', (event, data) => {
   // display the data in the main window
   ipcRenderer.send('return');
-  document.getElementById('scanIp').innerHTML = "<p>data</p>";
+  // document.getElementById('scanIp').innerHTML = "<p>data</p>";
 
 });
 

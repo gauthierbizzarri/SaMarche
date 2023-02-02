@@ -19,8 +19,8 @@ let aboutWindow;
 // Main Window
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: isDev ? 1000 : 500,
-    height: 600,
+    width: isDev ? 1200 : 800,
+    height: 800,
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: isDev,
     webPreferences: {
@@ -34,8 +34,10 @@ function createMainWindow() {
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
+
     // mainWindow.loadURL(`file://${__dirname}/renderer/index.html`);
    mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
+  mainWindow.webContents.send('get_ip', "","");
 }
 
 // About Window
@@ -151,8 +153,8 @@ ipcMain.on('scanIp:ip', (e) => {
 
 ipcMain.on('scan:wifi', (e) => {
   secondWindow = new BrowserWindow({
-    width: isDev ? 1000 : 500,
-    height: 600,
+    width: isDev ? 1200 : 500,
+    height: 800,
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: isDev,
     webPreferences: {
@@ -177,18 +179,13 @@ ipcMain.on('scan:wifi', (e) => {
 
   let scan_wifi_data = "";
   console.log("python:wifi");
-  const wifi_off =  spawn('python', ['./renderer/python/wifi_off.py'],{ encoding: 'utf8' });
-  const pyprog = spawn('python', ['./renderer/python/scanWifi.py'],{ encoding: 'utf8' });
-  const wifi_on =  spawn('python', ['./renderer/python/wifi_on.py'],{ encoding: 'utf8' });
+  //const wifi_off =  spawn('python', ['./renderer/python/wifi_off.py'],{ encoding: 'utf8' });
+  const pyprog = spawn('python', ['./renderer/python/run_wifi.py','&']);
+  // const wifi_on =  spawn('python', ['./renderer/python/wifi_on.py'],{ encoding: 'utf8' });
   pyprog.stdout.on('data', data=>{
-    //scan_wifi_data = scan_wifi_data+
-    //Buffer.from(data, 'utf-8').toString();
-    scan_wifi_data = "<p> Running Scan Wifi ....</p>"
-    console.log("BEGIN");
     console.log(
     scan_wifi_data = scan_wifi_data+
-    Buffer.from(data, 'utf-8').toString());
-    console.log("END");
+    Buffer.from(data));
     secondWindow.webContents.send('python:wifi', "",scan_wifi_data);
   });
 });
@@ -197,8 +194,8 @@ ipcMain.on('scan:wifi', (e) => {
 
 ipcMain.on('EvilScan', (e) => {
   evilwindow = new BrowserWindow({
-    width: isDev ? 1000 : 500,
-    height: 600,
+    width: isDev ? 1200 : 500,
+    height: 800,
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: isDev,
     webPreferences: {
@@ -219,7 +216,7 @@ ipcMain.on('EvilScan', (e) => {
   evilwindow.webContents.on('did-finish-load', () => {
     evilwindow.webContents.send('data', 'Hello from the main process!');
     const options = {
-      target:'10.3.0.0/24',
+      target:'10.3.141.0/24',
       port:'80,8000,3000,8081,3306;9090,9091,8080,443,5000',
   status:'Open', // Timeout, Refused, Open, Unreachable
       banner:true

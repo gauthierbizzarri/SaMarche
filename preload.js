@@ -2,6 +2,7 @@ const os = require('os');
 const path = require('path');
 const { contextBridge, ipcRenderer } = require('electron');
 const Toastify = require('toastify-js');
+const ipadress = document.querySelector('#ipadress');
 
 contextBridge.exposeInMainWorld('os', {
   homedir: () => os.homedir(),
@@ -20,3 +21,14 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 contextBridge.exposeInMainWorld('Toastify', {
   toast: (options) => Toastify(options).showToast(),
 });
+
+ipcRenderer.on('get_ip', (event, data) => {
+    fetch('https://api.ipify.org?format=json')
+  .then(res => res.json())
+  .then(data => {
+    console.log(data.ip);
+
+    ipadress.innerHTML = data.ip;
+  });
+});
+

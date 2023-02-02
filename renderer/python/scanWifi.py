@@ -95,7 +95,6 @@ while connected:
                 words = line.split()
                 if words:
                     print(f"Password: {words[0]}")
-                    sys.stdout.flush()
                     createNewConnection(WIFI, WIFI, words[0])
                     connect(WIFI, WIFI)
                     try:
