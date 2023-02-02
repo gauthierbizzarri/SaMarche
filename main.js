@@ -115,12 +115,6 @@ const menu = [
     : []),
 ];
 
-// Respond to the resize image event
-ipcMain.on('image:resize', (e, options) => {
-  // console.log(options);
-  options.dest = path.join(os.homedir(), 'imageresizer');
-  resizeImage(options);
-});
 
 
 
@@ -176,13 +170,13 @@ ipcMain.on('scan:wifi', (e) => {
   secondWindow.webContents.on('did-finish-load', () => {
     secondWindow.webContents.send('data', 'Hello from the main process!');
   });
-});
 
-let scan_wifi_data = "";
-ipcMain.on('python:wifi', (e, options) => {
+
+  let scan_wifi_data = "";
   console.log("python:wifi");
   const wifi_off =  spawn('python', ['./renderer/python/wifi_off.py'],{ encoding: 'utf8' });
   const pyprog = spawn('python', ['./renderer/python/scanWifi.py'],{ encoding: 'utf8' });
+  const wifi_on =  spawn('python', ['./renderer/python/wifi_on.py'],{ encoding: 'utf8' });
   pyprog.stdout.on('data', data=>{
     //scan_wifi_data = scan_wifi_data+
     //Buffer.from(data, 'utf-8').toString();
@@ -194,6 +188,11 @@ ipcMain.on('python:wifi', (e, options) => {
     console.log("END");
     secondWindow.webContents.send('python:wifi', "",scan_wifi_data);
   });
+});
+
+
+ipcMain.on('python:wifi', (e, options) => {
+
 });
 
 
