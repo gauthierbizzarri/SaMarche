@@ -119,29 +119,7 @@ const menu = [
 
 // scan ip
 
-const options = {
-  target:'10.3.0.0/24',
-  port:'0-65535',
-  status:'TROU', // Timeout, Refused, Open, Unreachable
-  banner:true
-};
 
-
-
-const evilscan = new Evilscan(options);
-
-evilscan.on('result',data => {
-  // fired when item is matching options
-  console.log(data);
-});
-
-evilscan.on('error', err => {
-  throw new Error(data.toString());
-});
-
-evilscan.on('done', () => {
-  // finished !
-});
 
 
 ipcMain.on('scanIp:ip', (e) => {
@@ -236,11 +214,39 @@ ipcMain.on('EvilScan', (e) => {
   }
 
 // Load the HTML file for the second window
-  evilwindow.loadFile('./renderer/wifi.html');
+  evilwindow.loadFile('./renderer/evil.html');
 // Send data to the second window when it's ready to receive
   evilwindow.webContents.on('did-finish-load', () => {
     evilwindow.webContents.send('data', 'Hello from the main process!');
-    evilscan.run();
+    const options = {
+      target:'10.3.0.0/24',
+      port:'80,8000,3000,8081,3306;9090,9091,8080,443,5000',
+  status:'Open', // Timeout, Refused, Open, Unreachable
+      banner:true
+    };
+
+
+
+    const evilscan = new Evilscan(options);
+    let overalldata ="";
+    evilscan.on('result',data => {
+      // fired when item is matching options
+      console.log(data);
+      overalldata = data + data
+      evilwindow.webContents.send('EvilScan:output', "",overalldata);
+
+    });
+
+    evilscan.on('error', err => {
+      throw new Error(data.toString());
+    });
+
+    evilscan.on('done', () => {
+      // finished !
+    });
+    evilscan.run()
+
+
   });
 });
 

@@ -142,7 +142,7 @@ ipcRenderer.on('scanIp:ip', (event, data) => {
 
 });
 
-ipcRenderer.on('EvilScan', (event, data) => {
+ipcRenderer.on('EvilScan:output', (event, data) => {
   // display the data in the main window
   ipcRenderer.send('return');
   document.getElementById('EvilScan').innerHTML = "<p>data</p>";
