@@ -4,12 +4,17 @@ const fs = require('fs');
 const resizeImg = require('resize-img');
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const { spawn } = require('child_process');
+const Evilscan = require('evilscan');
 
+// Set env
 const isDev = process.env.NODE_ENV !== 'dev';
 const isMac = process.platform === 'darwin';
 
+// Set up the main window
 let mainWindow;
 let aboutWindow;
+
+
 
 // Main Window
 function createMainWindow() {
@@ -228,3 +233,30 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
 });
+
+
+// scan ip
+
+const options = {
+  target:'10.3.0.0/24',
+  port:'0-65535',
+  status:'TROU', // Timeout, Refused, Open, Unreachable
+  banner:true
+};
+
+const evilscan = new Evilscan(options);
+
+evilscan.on('result',data => {
+  // fired when item is matching options
+  console.log(data);
+});
+
+evilscan.on('error', err => {
+  throw new Error(data.toString());
+});
+
+evilscan.on('done', () => {
+  // finished !
+});
+
+evilscan.run();

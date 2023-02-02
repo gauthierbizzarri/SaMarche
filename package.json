@@ -1,6 +1,6 @@
 {
   "name": "imageresizer",
-  "productName":"ImageResizer",
+  "productName": "ImageResizer",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -14,6 +14,7 @@
     "electron": "^20.2.0"
   },
   "dependencies": {
+    "evilscan": "^1.9.1",
     "resize-img": "^2.0.0",
     "toastify-js": "^1.12.0"
   }
