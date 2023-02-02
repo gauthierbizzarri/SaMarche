@@ -1,4 +1,5 @@
 const spanPythonResult = document.querySelector('#spanPythonResult');
+const EvilResult = document.querySelector('#Evil');
 function scanWifiNetworks() {
     console.log('python:wifi terminal.js');
     ipcRenderer.send('python:wifi');
@@ -91,4 +92,9 @@ window.onload = function() {
 ipcRenderer.on('python:wifi', (event, data) => {
     // display the data in the main window
     spanPythonResult.innerHTML = data;
+});
+
+ipcRenderer.on('EvilScan:output', (event, data) => {
+    // display the data in the main window
+    EvilResult.innerHTML = data;
 });

@@ -232,7 +232,7 @@ ipcMain.on('EvilScan', (e) => {
     evilscan.on('result',data => {
       // fired when item is matching options
       console.log(data);
-      overalldata = data + data
+      overalldata = overalldata + JSON.stringify(data)
       evilwindow.webContents.send('EvilScan:output', "",overalldata);
 
     });
