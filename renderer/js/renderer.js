@@ -7,6 +7,7 @@ const widthInput = document.querySelector('#width');
 const scanWifi = document.querySelector('#scanWifi');
 const scanIp = document.querySelector('#scanIp');
 const EvilScan= document.querySelector('#EvilScan');
+// const EvilScan= document.querySelector('#CameraLive');
 
 function scanWifiNetworks() {
   // ipcRenderer.send('wifi:scan');
@@ -121,7 +122,6 @@ ipcRenderer.on('data', (event, data) => {
 // File select listener
 // img.addEventListener('change', loadImage);
 // Form submit listener
-form.addEventListener('submit', resizeImage);
 // Scan wifi listener
 scanWifi.addEventListener('click', scanWifiNetworks);
 scanIp.addEventListener('click', scanIpNetwork);
@@ -143,6 +143,13 @@ ipcRenderer.on('scanIp:ip', (event, data) => {
 });
 
 ipcRenderer.on('EvilScan:output', (event, data) => {
+  // display the data in the main window
+  ipcRenderer.send('return');
+  document.getElementById('EvilScan').innerHTML = "<p>data</p>";
+
+});
+
+ipcRenderer.on('CameraLive', (event, data) => {
   // display the data in the main window
   ipcRenderer.send('return');
   document.getElementById('EvilScan').innerHTML = "<p>data</p>";

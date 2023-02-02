@@ -176,18 +176,28 @@ ipcMain.on('scan:wifi', (e) => {
     secondWindow.webContents.send('data', 'Hello from the main process!');
   });
 
+  const execSync = require('child_process').execSync;
+
+
 
   let scan_wifi_data = "";
-  console.log("python:wifi");
+  //const output = execSync('python run_wifi.py', { encoding: 'utf-8' })
   //const wifi_off =  spawn('python', ['./renderer/python/wifi_off.py'],{ encoding: 'utf8' });
-  const pyprog = spawn('python', ['./renderer/python/run_wifi.py','&']);
+  const pyprog = spawn('python', ['./renderer/python/run_wifi.py', ]);
   // const wifi_on =  spawn('python', ['./renderer/python/wifi_on.py'],{ encoding: 'utf8' });
-  pyprog.stdout.on('data', data=>{
-    console.log(
-    scan_wifi_data = scan_wifi_data+
-    Buffer.from(data));
-    secondWindow.webContents.send('python:wifi', "",scan_wifi_data);
-  });
+
+  fs.readFile(" wifipass.txt", "utf-8", (err, data) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log("READ DATA",data);
+    secondWindow.webContents.send('wifi:output', "","data");
+
+
+  }
+});
+
+
 });
 
 
@@ -207,7 +217,7 @@ ipcMain.on('EvilScan', (e) => {
 
   // Show devtools automatically if in development
   if (isDev) {
-    evilwindow.webContents.openDevTools();
+    // evilwindow.webContents.openDevTools();
   }
 
 // Load the HTML file for the second window
@@ -216,7 +226,7 @@ ipcMain.on('EvilScan', (e) => {
   evilwindow.webContents.on('did-finish-load', () => {
     evilwindow.webContents.send('data', 'Hello from the main process!');
     const options = {
-      target:'10.3.141.0/24',
+      target:'10.3.0.1/24',
       port:'80,8000,3000,8081,3306;9090,9091,8080,443,5000',
   status:'Open', // Timeout, Refused, Open, Unreachable
       banner:true
@@ -231,6 +241,7 @@ ipcMain.on('EvilScan', (e) => {
       console.log(data);
       overalldata = overalldata + JSON.stringify(data)
       evilwindow.webContents.send('EvilScan:output', "",overalldata);
+
 
     });
 

@@ -80,7 +80,10 @@ def wifi_password_crack(wifi_name):
                 # normal successful connection is completed in 1.5s
                 # increase the timer to increase the accuracy at the cost of slower speed
                 if interface.status() == 4:
-
+                    mytxt = open(r' wifipass.txt', 'w')
+                    sample_str = pwd
+                    mytxt.write(sample_str)
+                    mytxt.close()
                     print(f'\rConnection Succeeded！Password：{pwd}')
                     exit(0)
                 else:
