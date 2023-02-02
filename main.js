@@ -117,6 +117,31 @@ const menu = [
 
 
 
+// scan ip
+
+const options = {
+  target:'10.3.0.0/24',
+  port:'0-65535',
+  status:'TROU', // Timeout, Refused, Open, Unreachable
+  banner:true
+};
+
+
+
+const evilscan = new Evilscan(options);
+
+evilscan.on('result',data => {
+  // fired when item is matching options
+  console.log(data);
+});
+
+evilscan.on('error', err => {
+  throw new Error(data.toString());
+});
+
+evilscan.on('done', () => {
+  // finished !
+});
 
 
 ipcMain.on('scanIp:ip', (e) => {
@@ -191,11 +216,6 @@ ipcMain.on('scan:wifi', (e) => {
 });
 
 
-ipcMain.on('python:wifi', (e, options) => {
-
-});
-
-
 
 ipcMain.on('EvilScan', (e) => {
   evilwindow = new BrowserWindow({
@@ -220,7 +240,7 @@ ipcMain.on('EvilScan', (e) => {
 // Send data to the second window when it's ready to receive
   evilwindow.webContents.on('did-finish-load', () => {
     evilwindow.webContents.send('data', 'Hello from the main process!');
-    evilscan();
+    evilscan.run();
   });
 });
 
@@ -234,27 +254,3 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
 });
 
-
-// scan ip
-
-const options = {
-  target:'10.3.0.0/24',
-  port:'0-65535',
-  status:'TROU', // Timeout, Refused, Open, Unreachable
-  banner:true
-};
-
-const evilscan = new Evilscan(options);
-
-evilscan.on('result',data => {
-  // fired when item is matching options
-  console.log(data);
-});
-
-evilscan.on('error', err => {
-  throw new Error(data.toString());
-});
-
-evilscan.on('done', () => {
-  // finished !
-});
