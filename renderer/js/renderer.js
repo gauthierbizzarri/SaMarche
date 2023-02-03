@@ -7,6 +7,8 @@ const widthInput = document.querySelector('#width');
 const scanWifi = document.querySelector('#scanWifi');
 const scanIp = document.querySelector('#scanIp');
 const EvilScan= document.querySelector('#EvilScan');
+const Camera= document.querySelector('#camera');
+const Route= document.querySelector('#routes');
 // const EvilScan= document.querySelector('#CameraLive');
 
 function scanWifiNetworks() {
@@ -25,30 +27,16 @@ function evilscan() {
   console.log('EvilScan');
   ipcRenderer.send('EvilScan');
 }
-
+function camera() {
+  // ipcRenderer.send('wifi:scan');
+  console.log('camera');
+  ipcRenderer.send('camera');
+}
 
 // Load image and show form
-function loadImage(e) {
-  const file = e.target.files[0];
-
-  // Check if file is an image
-  if (!isFileImage(file)) {
-    alertError('Please select an image');
-    return;
-  }
-
-  // Add current height and width to form using the URL API
-  const image = new Image();
-  image.src = URL.createObjectURL(file);
-  image.onload = function () {
-    widthInput.value = this.width;
-    heightInput.value = this.height;
-  };
-
-  // Show form, image name and output path
-  form.style.display = 'block';
-  filename.innerHTML = img.files[0].name;
-  outputPath.innerText = path.join(os.homedir(), 'imageresizer');
+function route () {
+  console.log('Route');
+  ipcRenderer.send('Routes');
 }
 
 // Make sure file is an image
@@ -57,31 +45,7 @@ function isFileImage(file) {
   return file && acceptedImageTypes.includes(file['type']);
 }
 
-// Resize image
-function resizeImage(e) {
-  e.preventDefault();
 
-  if (!img.files[0]) {
-    alertError('Please upload an image');
-    return;
-  }
-
-  if (widthInput.value === '' || heightInput.value === '') {
-    alertError('Please enter a width and height');
-    return;
-  }
-
-  // Electron adds a bunch of extra properties to the file object including the path
-  const imgPath = img.files[0].path;
-  const width = widthInput.value;
-  const height = heightInput.value;
-
-  ipcRenderer.send('image:resize', {
-    imgPath,
-    height,
-    width,
-  });
-}
 
 // When done, show message
 ipcRenderer.on('image:done', () =>
@@ -101,18 +65,7 @@ function alertSuccess(message) {
   });
 }
 
-function alertError(message) {
-  Toastify.toast({
-    text: message,
-    duration: 5000,
-    close: false,
-    style: {
-      background: 'red',
-      color: 'white',
-      textAlign: 'center',
-    },
-  });
-}
+
 
 
 ipcRenderer.on('data', (event, data) => {
@@ -126,6 +79,8 @@ ipcRenderer.on('data', (event, data) => {
 scanWifi.addEventListener('click', scanWifiNetworks);
 scanIp.addEventListener('click', scanIpNetwork);
 EvilScan.addEventListener('click',evilscan);
+Camera.addEventListener('click',camera);
+Route.addEventListener('click',route);
 
 
 ipcRenderer.on('scan:wifi', (event, data) => {
@@ -149,11 +104,20 @@ ipcRenderer.on('EvilScan:output', (event, data) => {
 
 });
 
+ipcRenderer.on('Routes:output', (event, data) => {
+  // display the data in the main window
+  ipcRenderer.send('return');
+  console.log("IM CALLED");
+  document.getElementById('Routes').innerHTML = "<p>data</p>";
+
+});
+
 ipcRenderer.on('CameraLive', (event, data) => {
   // display the data in the main window
   ipcRenderer.send('return');
   document.getElementById('EvilScan').innerHTML = "<p>data</p>";
 
 });
+
 
 

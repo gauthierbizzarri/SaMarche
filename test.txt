@@ -1,0 +1,12 @@
+admin
+test
+login
+video
+stream
+snapshot
+camera
+motors
+right
+left
+leds
+batterie

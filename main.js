@@ -5,14 +5,16 @@ const resizeImg = require('resize-img');
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const { spawn } = require('child_process');
 const Evilscan = require('evilscan');
-
 // Set env
 const isDev = process.env.NODE_ENV !== 'dev';
 const isMac = process.platform === 'darwin';
+var capcon = require('capture-console');
 
 // Set up the main window
 let mainWindow;
 let aboutWindow;
+
+
 
 
 
@@ -258,6 +260,62 @@ ipcMain.on('EvilScan', (e) => {
   });
 });
 
+
+
+
+ipcMain.on('Routes', (e) => {
+  RoutesWindow = new BrowserWindow({
+    width: isDev ? 1200 : 500,
+    height: 800,
+    icon: `${__dirname}/assets/icons/Icon_256x256.png`,
+    resizable: isDev,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+
+  // Show devtools automatically if in development
+  if (isDev) {
+    // evilwindow.webContents.openDevTools();
+  }
+
+// Load the HTML file for the second window
+  RoutesWindow.loadFile('./renderer/routes.html');
+// Send data to the second window when it's ready to receive
+  RoutesWindow.webContents.on('did-finish-load', () => {
+    RoutesWindow.webContents.send('data', 'Hello from the main process!');
+    const options = {
+      target:'10.3.0.1/24',
+      port:'80,8000,3000,8081,3306;9090,9091,8080,443,5000',
+  status:'Open', // Timeout, Refused, Open, Unreachable
+      banner:true
+    };
+
+
+    const { exec } = require('child_process');
+    exec('node dirbuster_script.js', (error, stdout, stderr) => {
+  if (error) {
+    //console.error(`exec error: ${error}`);
+    return;
+  }
+  //console.log(`stdout: ${stdout}`);
+
+    RoutesWindow.webContents.send('Routes:output', "",stdout);
+  //console.error(`stderr: ${stderr}`);
+});
+
+
+
+  });
+});
+
+
+
+ipcMain.on('camera', (e) => {
+  require('electron').shell.openExternal("https://gitlab.imerir.com/alexandre.negrel/satellite/-/tree/gauthier_dev");
+});
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   if (!isMac) app.quit();

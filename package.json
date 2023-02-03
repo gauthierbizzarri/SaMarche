@@ -8,14 +8,17 @@
     "start": "electron ."
   },
   "build": {
-    "extraResources": "python_scripts"},
+    "extraResources": "python_scripts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "capture-console": "^1.0.1",
     "electron": "^20.2.0"
   },
   "dependencies": {
+    "dirbuster": "^0.4.0",
     "evilscan": "^1.9.1",
     "resize-img": "^2.0.0",
     "toastify-js": "^1.12.0"

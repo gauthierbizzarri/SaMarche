@@ -1,6 +1,6 @@
 const spanPythonResult = document.querySelector('#Python');
 const EvilResult = document.querySelector('#Evil');
-
+const RoutesResult = document.querySelector('#Routes');
 
 
 function scanWifiNetworks() {
@@ -102,4 +102,10 @@ ipcRenderer.on('EvilScan:output', (event, data) => {
     // display the data in the main window
 
     EvilResult.innerHTML = data;
+});
+
+ipcRenderer.on('Routes:output', (event, data) => {
+    // display the data in the main window
+    console.log("Im being called");
+    RoutesResult.innerHTML = data;
 });
