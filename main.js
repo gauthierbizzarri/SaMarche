@@ -314,7 +314,7 @@ ipcMain.on('Routes', (e) => {
 
 
 ipcMain.on('camera', (e) => {
-  require('electron').shell.openExternal("https://gitlab.imerir.com/alexandre.negrel/satellite/-/tree/gauthier_dev");
+  require('electron').shell.openExternal("https://google.com");
 });
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
